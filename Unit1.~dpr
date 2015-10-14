@@ -4,28 +4,18 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Grids, ComCtrls, XPMan, Menus;
+  Dialogs, StdCtrls, Grids, ComCtrls, XPMan;
 
 type
   TForm1 = class(TForm)
     StringGrid1: TStringGrid;
     code2: TMemo;
     XPManifest1: TXPManifest;
-    MainMenu1: TMainMenu;
-    Datei1: TMenuItem;
-    Ansicht1: TMenuItem;
-    About1: TMenuItem;
-    Open1: TMenuItem;
-    BuildSave1: TMenuItem;
-    Quit1: TMenuItem;
-    Simulator1: TMenuItem;
-    About2: TMenuItem;
+    Button3: TButton;
+    Button4: TButton;
     procedure FormCreate(Sender: TObject);
-    procedure FormDblClick(Sender: TObject);
-    procedure Open1Click(Sender: TObject);
-    procedure BuildSave1Click(Sender: TObject);
-    procedure Quit1Click(Sender: TObject);
-    procedure Simulator1Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -35,12 +25,9 @@ type
 
 var
   Form1: TForm1;
+  Cmd, Cmd2:Array [1..30,0..8] of String;
   CSV,homedir: String;
-  code: TStringlist;
-  Cmd:Array [1..30,0..8] of String;
 implementation
-
-uses Unit2;
 
 {$R *.dfm}
 
@@ -90,7 +77,7 @@ end;
 procedure BuildCode();
 var
 i: integer;
-template: TStringList;
+template, code: TStringList;
 begin
 template:=TStringlist.Create;
 code:=TStringlist.create;
@@ -171,60 +158,23 @@ Form1.code2.Lines.AddStrings(code);
 code.SaveToFile(homedir+'\code.DAC');
 end;
 
-procedure OpenCSV();
+procedure TForm1.Button3Click(Sender: TObject);
 var
 opendialog:topendialog;
 begin
-opendialog:=topendialog.Create(form1);
+opendialog:=topendialog.Create(self);
 opendialog.InitialDir:=homedir;
 opendialog.Options:=[ofFileMustExist];
 opendialog.Filter:='Excel CSV-Datei (".csv")|*.csv';
 if openDialog.Execute
 then CSVtoWS(openDialog.FileName);
+
 opendialog.Free;
 end;
 
-procedure SaveDAC();
-var
-savedialog:TSavedialog;
+procedure TForm1.Button4Click(Sender: TObject);
 begin
-savedialog:=tsavedialog.Create(form1);
-savedialog.InitialDir:=homedir;
-savedialog.Filter:='Wafersägen DAC-Datei (".DAC")|*.DAC';
-savedialog.FileName:='code.DAC';
-if savedialog.Execute
-then
-begin
-BuildCode();
-code.SaveToFile(savedialog.FileName);
-savedialog.Free;
-end;
-end;
-
-procedure TForm1.FormDblClick(Sender: TObject);
-begin
-form2.Visible:=true;
-end;
-
-procedure TForm1.Open1Click(Sender: TObject);
-begin
-OpenCSV();
-end;
-
-procedure TForm1.BuildSave1Click(Sender: TObject);
-begin
-SaveDAC();
-end;
-
-procedure TForm1.Quit1Click(Sender: TObject);
-begin
-form1.Close;
-end;
-
-procedure TForm1.Simulator1Click(Sender: TObject);
-begin
-if form2.Visible=true then form2.Visible:=false else form2.Visible:=true;
-if Simulator1.Checked=true then Simulator1.Checked:=false else Simulator1.Checked:=true;
+BuildCode;
 end;
 
 end.
