@@ -1,11 +1,9 @@
 object Form1: TForm1
-  Left = 242
-  Top = 186
-  BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsSingle
-  Caption = 'CSV - WS'
-  ClientHeight = 553
-  ClientWidth = 1097
+  Left = 407
+  Top = 291
+  Width = 353
+  Height = 327
+  Caption = 'Variablen'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -813,76 +811,89 @@ object Form1: TForm1
     0000000000000000000000000000000000000000000000000000000000FFFFAC
     41F87FAC41F87FAC41FC1FAC41FC0FAC418007AC418003AC418003AC418003AC
     418023AC418027AC41803FAC41803FAC41803FAC41803FAC41FFFFAC41}
-  Menu = MainMenu1
   OldCreateOrder = False
-  OnCreate = FormCreate
-  OnDblClick = FormDblClick
   PixelsPerInch = 96
   TextHeight = 13
-  object StringGrid1: TStringGrid
+  object Button1: TButton
     Left = 8
-    Top = 8
-    Width = 609
-    Height = 537
-    ColCount = 9
-    FixedColor = clMenuBar
-    RowCount = 31
+    Top = 256
+    Width = 121
+    Height = 25
+    Caption = 'Strukturiere'
     TabOrder = 0
+    OnClick = Button1Click
   end
-  object code2: TMemo
-    Left = 624
+  object Memo1: TMemo
+    Left = 136
     Top = 8
-    Width = 465
-    Height = 537
-    Color = clBlack
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWhite
-    Font.Height = -11
-    Font.Name = 'Lucida Console'
-    Font.Style = []
-    ParentFont = False
-    ScrollBars = ssBoth
+    Width = 193
+    Height = 273
     TabOrder = 1
-    WordWrap = False
   end
-  object XPManifest1: TXPManifest
-    Left = 320
-    Top = 432
+  object ed_elwidth: TLabeledEdit
+    Left = 8
+    Top = 32
+    Width = 121
+    Height = 21
+    EditLabel.Width = 105
+    EditLabel.Height = 13
+    EditLabel.Caption = 'Elektrodenbreite [mm]:'
+    TabOrder = 2
+    Text = '1,5'
   end
-  object MainMenu1: TMainMenu
-    Left = 256
-    Top = 448
-    object Datei1: TMenuItem
-      Caption = 'File'
-      object Open1: TMenuItem
-        Caption = '&Open ("*.csv")'
-        OnClick = Open1Click
-      end
-      object OpenDAC1: TMenuItem
-        Caption = 'Open ("*.DAC")'
-        OnClick = OpenDAC1Click
-      end
-      object BuildSave1: TMenuItem
-        Caption = '&Build and Save'
-        OnClick = BuildSave1Click
-      end
-      object Quit1: TMenuItem
-        Caption = '&Quit'
-        OnClick = Quit1Click
-      end
-    end
-    object Ansicht1: TMenuItem
-      Caption = 'View'
-      object Simulator1: TMenuItem
-        Caption = 'Simulator'
-        OnClick = Simulator1Click
-      end
-    end
-    object About1: TMenuItem
-      Caption = 'Help'
-      object About2: TMenuItem
-        Caption = 'About'
-      end
-    end
+  object ed_bowidth: TLabeledEdit
+    Left = 8
+    Top = 72
+    Width = 121
+    Height = 21
+    EditLabel.Width = 85
+    EditLabel.Height = 13
+    EditLabel.Caption = 'Au'#223'enbreite [mm]:'
+    TabOrder = 3
+    Text = '1,5'
+  end
+  object ed_c1width: TLabeledEdit
+    Left = 8
+    Top = 112
+    Width = 121
+    Height = 21
+    EditLabel.Width = 120
+    EditLabel.Height = 13
+    EditLabel.Caption = 'Schnittbreite au'#223'en [mm]:'
+    TabOrder = 4
+    Text = '0,75'
+  end
+  object ed_cutdepth: TLabeledEdit
+    Left = 8
+    Top = 192
+    Width = 121
+    Height = 21
+    EditLabel.Width = 79
+    EditLabel.Height = 13
+    EditLabel.Caption = 'Schnitttiefe ['#181'm]:'
+    TabOrder = 5
+    Text = '25'
+  end
+  object ed_c2width: TLabeledEdit
+    Left = 8
+    Top = 152
+    Width = 121
+    Height = 21
+    EditLabel.Width = 116
+    EditLabel.Height = 13
+    EditLabel.Caption = 'Schnittbreite innen [mm]:'
+    TabOrder = 6
+    Text = '1,5'
+  end
+  object ed_blwidth: TLabeledEdit
+    Left = 8
+    Top = 232
+    Width = 121
+    Height = 21
+    EditLabel.Width = 97
+    EditLabel.Height = 13
+    EditLabel.Caption = 'S'#228'geblattbreite ['#181'm]:'
+    TabOrder = 7
+    Text = '50'
   end
 end

@@ -4,17 +4,19 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Grids, ComCtrls, ShellCtrls;
+  Dialogs, StdCtrls, ExtCtrls;
 
 type
   TForm1 = class(TForm)
     Button1: TButton;
-    StringGrid1: TStringGrid;
-    code: TMemo;
-    Button2: TButton;
+    Memo1: TMemo;
+    ed_elwidth: TLabeledEdit;
+    ed_bowidth: TLabeledEdit;
+    ed_c1width: TLabeledEdit;
+    ed_cutdepth: TLabeledEdit;
+    ed_c2width: TLabeledEdit;
+    ed_blwidth: TLabeledEdit;
     procedure Button1Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -23,138 +25,59 @@ type
 
 var
   Form1: TForm1;
-  Cmd, Cmd2:Array [1..30,0..8] of String;
-  CSV: String;
+  blade_width, border_width, cut1_width, cut2_width, cut_depth, electrode_width, a: real;
+
 implementation
+
+uses Unit2;
 
 {$R *.dfm}
 
 procedure TForm1.Button1Click(Sender: TObject);
-var i,n: integer;
-temp1,temp2: TStringlist;
 begin
-//Lade die .csv-Datei in die temp1-Stringlist;
+blade_width:=strtofloat(ed_blwidth.Text);
+border_width:=strtofloat(ed_bowidth.Text);
+cut1_width:=strtofloat(ed_c1width.Text);
+cut2_width:=strtofloat(ed_c2width.Text);
+cut_depth:=strtofloat(ed_cutdepth.Text);
+electrode_width:=strtofloat(ed_elwidth.Text);
 
-temp1:=TStringList.Create;
-temp2:=TStringList.Create;
-temp1.LoadFromFile('pzt.csv');
-temp1.NameValueSeparator:=';';
-temp2.NameValueSeparator:=';';
-temp2.Delimiter:=';';
+form2.Visible:=true;
+memo1.Lines.Clear;
 
-//Lese Parameter 0 bis 8 von Befehl 1 bis 30 ein
+a:=cut1_width*20;
+memo1.Lines.Add('sh_Cut1.height = ' + floattostr(a));
+form2.sh_cut1.Height:=round(a);
+a:=border_width*20;
+memo1.Lines.Add('sh_Cut1.top = ' + floattostr(a));
+form2.sh_cut1.Top:=round(a);
 
-for i:=1 to 30 do
-begin
-temp2.Add(temp1.ValueFromIndex[i]);
-for n:=0 to 8 do
-begin
-temp2.Add(temp2.ValueFromIndex[n]);
-Cmd[i,n]:=temp2.Names[n];
-stringgrid1.Cells[n,i]:=Cmd[i,n];
-end;
-temp2.Clear;
-end;
-end;
+a:=cut2_width*20;
+memo1.Lines.Add('sh_Cut2.height = ' + floattostr(a));
+form2.sh_cut2.Height:=round(a);
+a:=20*(electrode_width+border_width+cut1_width);
+memo1.Lines.Add('sh_Cut2.top = ' + floattostr(a));
+form2.sh_cut2.Top:=round(a);
 
-procedure TForm1.FormCreate(Sender: TObject);
-begin
-StringGrid1.Cells[0,0]:='Mode';
-StringGrid1.Cells[1,0]:='PARA_1';
-StringGrid1.Cells[2,0]:='PARA_2';
-StringGrid1.Cells[3,0]:='PARA_3';
-StringGrid1.Cells[4,0]:='HEIGHT';
-StringGrid1.Cells[5,0]:='MODE';
-StringGrid1.Cells[6,0]:='SPEED';
-StringGrid1.Cells[7,0]:='INDEX';
-StringGrid1.Cells[8,0]:='MODE';
-end;
+a:=cut2_width*20;
+memo1.Lines.Add('sh_Cut3.height = ' + floattostr(a));
+form2.sh_cut3.Height:=round(a);
+a:=20*(electrode_width*2+border_width+cut1_width+cut2_width);
+memo1.Lines.Add('sh_Cut4.top = ' + floattostr(a));
+form2.sh_cut3.Top:=round(a);
 
-procedure TForm1.Button2Click(Sender: TObject);
-var
-i: integer;
-template, code2: TStringList;
-begin
-code.Clear;
-template:=TStringlist.Create;
-code2:=TStringlist.create;
-template.LoadFromFile('pre.DAC');
-code.Lines.AddStrings(template);
-code2.AddStrings(template);
+a:=cut1_width*20;
+memo1.Lines.Add('sh_Cut4.height = ' + floattostr(a));
+form2.sh_cut4.Height:=round(a);
+a:=20*(electrode_width*3+border_width+cut1_width+cut2_width*2);
+memo1.Lines.Add('sh_Cut4.top = ' + floattostr(a));
+form2.sh_cut4.Top:=round(a);
 
-//Add DAC_HEI Values
-code.Lines.Add('DAC_HEI = [32, 0, 0');
-code2.Add('DAC_HEI = [32, 0, 0');
-for i:=1 to 30 do
-begin
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.Count-1] + ', ' + floattostr(strtofloat(Cmd[i,4])*10000000);
-code2.Strings[code.Lines.Count-1]:=code2.Strings[code.Count-1] + ', ' + floattostr(strtofloat(Cmd[i,4])*10000000);
-end;
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.Count-1]+']';
-code2.Strings[code.Count-1]:=code.Strings[code.Count-1]+']';
-//Add DAC_SPD Values
-code.Lines.Add('DAC_SPD = [32, 0, 0');
-for i:=1 to 30 do
-begin
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.Count-1] + ', ' + floattostr(strtofloat(Cmd[i,6])*10000000);
-end;
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.Count-1]+']';
+memo1.Lines.Add('Akkumulierte Breite = ' + floattostr(border_width*2+electrode_width*3+cut1_width*2+cut2_width*2))
 
-//Add DAC_IDX Values
-code.Lines.Add('DAC_IDX = [32, 0, 0');
-for i:=1 to 30 do
-begin
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.Count-1] + ', ' + floattostr(strtofloat(Cmd[i,7])*10000000);
-end;
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.Count-1]+']';
 
-//Add PARAM_1 Values
-for i:=1 to 30 do
-begin
-code.Lines.Add('PA'+ Format('%.2d',[i]) + ' = ');
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.count-1]+Cmd[i,1];
-end;
 
-//Add PARAM_2 Values
-for i:=1 to 30 do
-begin
-code.Lines.Add('PB'+ Format('%.2d',[i]) + ' = ');
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.count-1]+Cmd[i,2];
-end;
 
-//Add PARAM_3 Values
-for i:=1 to 30 do
-begin
-code.Lines.Add('PC'+ Format('%.2d',[i]) + ' = ');
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.count-1]+Cmd[i,3];
-end;
-
-//Add ST (Befehls) Values
-for i:=1 to 30 do
-begin
-code.Lines.Add('ST'+ Format('%.2d',[i]) + ' = ');
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.count-1]+Cmd[i,0];
-end;
-
-//Add HEI Values
-for i:=1 to 30 do
-begin
-code.Lines.Add('HEI'+ Format('%.2d',[i]) + ' = ');
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.count-1]+Cmd[i,5];
-end;
-
-//Add IDX Values
-for i:=1 to 30 do
-begin
-code.Lines.Add('IDX'+ Format('%.2d',[i]) + ' = ');
-code.Lines.Strings[code.Lines.Count-1]:=code.Lines.Strings[code.Lines.count-1]+Cmd[i,8];
-end;
-
-template.Clear;
-template.LoadFromFile('post.DAC');
-code.Lines.AddStrings(template);
-
-code.Lines.SaveToFile('code.DAC');
 end;
 
 end.
